@@ -7,12 +7,24 @@ class MovieQueuesController < ApplicationController
   rescue_from StandardError, with: :return_service_error
   rescue_from ClientError, with: :return_client_error
 
-  # return a user's queue
+  # return a user's movie queue
   def show
+    user_id = params[:id]
+    sorted_movie_ids = MovieQueues.get user_id
+    movie_queue = Array.new.tap do |mq|
+      if !sorted_movie_ids.nil?
+        sorted_movie_ids.split(',').each_with_index do |mid, index|
+          movie = MovieServicesProxy.get mid
+          movie['rank'] = (index+1).to_s
+          mq << movie
+        end
+      end
+    end
 
+    render json: movie_queue.to_json, status: :ok
   end
 
-  # create a queue for user
+  # create a movie queue for an user
   def create
     uid = params[:user_id]
     mids = params[:sorted_movie_ids]

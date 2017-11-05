@@ -28,4 +28,21 @@ class MovieQueuesControllerTest < ActionController::TestCase
     assert_response :bad_request
   end
 
+  test 'get -- should return a user\'s movie queue' do
+    uid = '1'
+    MovieQueues.create(uid, ['3', '300'])
+    get :show, params: {id: uid}
+    assert_response :ok
+    assert_equal 2, JSON.parse(response.body).size,
+                 'should have returned number of movie in the queue'
+  end
+
+  test 'get -- should return empty queue if there is no such user' do
+    uid = 'fake_id'
+    get :show, params: {id: uid}
+    assert_response :ok
+    assert_equal 0, JSON.parse(response.body).size,
+                 'should have returned 0 if user does not exist'
+  end
+
 end
