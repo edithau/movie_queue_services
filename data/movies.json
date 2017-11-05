@@ -1,0 +1,68 @@
+[
+  {
+    "id": "1",
+    "name": "Tropic Thunder",
+    "year": "2008",
+    "genre": "Comedy"
+  },
+  {
+    "id": "2",
+    "name": "Shawshank Redemption",
+    "year": "1994",
+    "genre": "Drama"
+  },
+  {
+    "id": "3",
+    "name": "The God Father",
+    "year": "1972",
+    "genre": "Drama"
+  },
+  {
+    "id": "4",
+    "name": "Schindler's List",
+    "year": "1993",
+    "genre": "Biography"
+  },
+  {
+    "id": "5",
+    "name": "Star Wars: Episode V - The Empire Strikes Back",
+    "year": "1980",
+    "genre": "Fantasy"
+  },
+  {
+    "id": "6",
+    "name": "The Lord of the Rings: The Fellowship of the Ring",
+    "year": "2001",
+    "genre": "Fantasy"
+  },
+  {
+    "id": "7",
+    "name": "The Matrix",
+    "year": "1999",
+    "genre": "Action"
+  },
+  {
+    "id": "8",
+    "name": "Se7en",
+    "year": "1995",
+    "genre": "Sci-Fi"
+  },
+  {
+    "id": "9",
+    "name": "O Brother, Where Art Thou?",
+    "year": "2000",
+    "genre": "Comedy"
+  },
+  {
+    "id": "10",
+    "name": "Full Metal Jacket",
+    "year": "1987",
+    "genre": "Drama"
+  },
+  {
+    "id": "11",
+    "name": "The Terminator",
+    "year": "1984",
+    "genre": "Sci-Fi"
+  }
+]
