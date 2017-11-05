@@ -1,0 +1,2 @@
+class MovieQueuesController < ApplicationController
+end
