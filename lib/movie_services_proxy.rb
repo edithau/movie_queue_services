@@ -26,7 +26,7 @@ class MovieServicesProxy
       else
         # service endpoint returns default number of most recently rented movies required_fields
         response = RestClient.get service_endpoint params: { fields: required_fields }
-        raise StandardError, "Cannot pre-populate Movies from endpoint #{service_endpoint}" if response != '200'
+        raise "Cannot pre-populate Movies from endpoint #{service_endpoint}" if response != '200'
         movies = JSON.parse(response.body)
       end
 
@@ -50,6 +50,8 @@ class MovieServicesProxy
 
     def get_from_source(ids)
       RestClient.get service_endpoint + '?ids=' + ids.join(','), params: { fields: required_fields }
+    rescue => e
+      raise e, "Cannot connect to Movie Services endpoint #{service_endpoint}"
     end
 
     def required_fields

@@ -2,7 +2,7 @@ require 'test_helper'
 
 class MovieServicesProxyTest < ActiveSupport::TestCase
 
-  test '#check_ids - ids are valid' do
+  test '.check_ids - ids are valid' do
 
     MovieServicesProxy.stubs(:get).returns(  {
                                                  "id": "1",
@@ -16,7 +16,7 @@ class MovieServicesProxyTest < ActiveSupport::TestCase
   end
 
 
-  test '#check_ids - ids are not valid' do
+  test '.check_ids - ids are not valid' do
     MovieServicesProxy.stubs(:get).returns( [])
     MovieServicesProxy.stubs(:get_from_source).returns([])
 
@@ -25,9 +25,9 @@ class MovieServicesProxyTest < ActiveSupport::TestCase
            'should have returned an array with the invalid id'
   end
 
-  test '#prepopulate' do
+  test '.prepopulate' do
     assert (MovieServicesProxy.prepopulate File.join(Rails.root, 'data', 'movies.json')).size > 0,
-                                          'should have pre-populated redis with movie records'
+           'should have pre-populated redis with movie records'
 
   end
 end

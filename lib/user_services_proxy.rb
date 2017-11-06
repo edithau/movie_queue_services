@@ -24,7 +24,7 @@ class UserServicesProxy
       else
         # service endpoint returns default number of user required_fields
         response = RestClient.get service_endpoint params: { fields: required_fields }
-        raise StandardError, "Cannot pre-populate Users from endpoint #{service_endpoint}" if response != '200'
+        raise "Cannot pre-populate Users from endpoint #{service_endpoint}" if response != '200'
         users = JSON.parse(response.body)
       end
 
@@ -48,6 +48,8 @@ class UserServicesProxy
 
     def get_from_source(uid)
       RestClient.get service_endpoint + '/' + uid, params: { fields: required_fields }
+    rescue => e
+      raise e, "Cannot connect to User Services endpoint #{service_endpoint}"
     end
 
     def required_fields
