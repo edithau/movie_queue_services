@@ -45,18 +45,26 @@ class MovieServicesProxy
     private
 
     def service_endpoint
-      'xxx'  # XXX should move to configuration file
+      'http://localhost:3003/movies'  # XXX should move to configuration file
     end
 
+    # xxx - not the same error handling process for prepop and real time.  refactor!
     def get_from_source(ids)
-      RestClient.get service_endpoint + '?ids=' + ids.join(','), params: { fields: required_fields }
-    rescue => e
-      raise e, "Cannot connect to Movie Services endpoint #{service_endpoint}"
+      response = RestClient.get service_endpoint + '?ids=' + ids.join(','), params: { fields: required_fields }
+      raise "Movie Services #{service_endpoint} returns status #{response.code}" if response.code != 200
+      movies = JSON.parse(response.body)
+      movies.each do |movie|
+        redis.hmset(key(movie['id']),
+                    'id', movie['id'], 'name', movie['name'], 'year', movie['year'], 'genre', movie['genre'])
+      end
+      ids
+    # rescue => e
+    #   raise e, "Cannot connect to Movie Services endpoint #{service_endpoint}"
     end
 
     def required_fields
       # the movie queue service only needs the movie name, genre, and year from the movie service
-      'id, name, year, genre'
+      'id,name,year,genre'
     end
 
 
@@ -66,7 +74,7 @@ class MovieServicesProxy
 
     def key(id)
       # key prefix + uid is the key
-      'm:' + id
+      'm:' + id.to_s
     end
   end
 end

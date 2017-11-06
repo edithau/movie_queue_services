@@ -33,6 +33,12 @@ class MovieQueuesControllerTest < ActionController::TestCase
     assert_response :bad_request
   end
 
+  test '#create -- should return error if requested movie queue size is larger than max size' do
+    MovieQueues.stubs(:max_queue_size).returns 5
+    post :create, params: {user_id: '1', movie_ids: '1,2,3,4,5,6'}
+    assert_response :bad_request
+  end
+
   test '#show -- should return a user\'s movie queue' do
     uid = '1'
     MovieQueues.create(uid, '3,9')

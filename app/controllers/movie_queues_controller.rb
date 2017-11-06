@@ -26,7 +26,7 @@ class MovieQueuesController < ApplicationController
     validate_user uid
     validate_movies mids
 
-    MovieQueues.create(uid, mids)  # XXX .. refactor? should only accept queue upto max size
+    MovieQueues.create(uid, mids)
 
     head :created
   end

@@ -43,13 +43,19 @@ class UserServicesProxy
     private
 
     def service_endpoint
-      'xxx'  # XXX should move to configuration file
+      'http://localhost:3002/users'  # XXX should move to configuration file
     end
 
+    # xxx - not the same error handling process for prepop and real time.  refactor!
     def get_from_source(uid)
-      RestClient.get service_endpoint + '/' + uid, params: { fields: required_fields }
-    rescue => e
-      raise e, "Cannot connect to User Services endpoint #{service_endpoint}"
+      response = RestClient.get service_endpoint + '/' + uid, params: { fields: required_fields }
+      raise "User Services #{service_endpoint} returns status #{response.code}" if response.code != 200
+
+      user = JSON.parse(response.body)
+      redis.hmset(key(user['id']), 'lname', user['lname'], 'fname', user['fname'])
+      {'lname': user['lname'], 'fname': user['fname']}
+    # rescue => e
+    #   raise e, "Cannot connect to User Services endpoint #{service_endpoint}"
     end
 
     def required_fields
@@ -63,7 +69,7 @@ class UserServicesProxy
 
     def key(uid)
       # key prefix + uid is the key
-      'u:' + uid
+      'u:' + uid.to_s
     end
   end
 end
