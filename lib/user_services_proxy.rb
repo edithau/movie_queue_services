@@ -22,12 +22,10 @@ class UserServicesProxy
         file = File.read(json_file)
         users = JSON.parse(file)
       else
-        # service endpoint returns default number of user required_fields
         response = RestClient.get service_endpoint params: { fields: required_fields }
-        raise "Cannot pre-populate Users from endpoint #{service_endpoint}" if response != '200'
+        raise "User Services #{service_endpoint} returns status #{response.code}" if response.code != 200
         users = JSON.parse(response.body)
       end
-
 
       clear_cache
       users.each do |user|
@@ -46,16 +44,14 @@ class UserServicesProxy
       'http://localhost:3002/users'  # XXX should move to configuration file
     end
 
-    # xxx - not the same error handling process for prepop and real time.  refactor!
     def get_from_source(uid)
+      Rails.logger.info("Cache Missed -- User")
       response = RestClient.get service_endpoint + '/' + uid, params: { fields: required_fields }
       raise "User Services #{service_endpoint} returns status #{response.code}" if response.code != 200
 
       user = JSON.parse(response.body)
       redis.hmset(key(user['id']), 'lname', user['lname'], 'fname', user['fname'])
       {'lname': user['lname'], 'fname': user['fname']}
-    # rescue => e
-    #   raise e, "Cannot connect to User Services endpoint #{service_endpoint}"
     end
 
     def required_fields

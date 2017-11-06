@@ -50,6 +50,7 @@ class MovieServicesProxy
 
     # xxx - not the same error handling process for prepop and real time.  refactor!
     def get_from_source(ids)
+      Rails.logger.info("Cache Missed -- Movie")
       response = RestClient.get service_endpoint + '?ids=' + ids.join(','), params: { fields: required_fields }
       raise "Movie Services #{service_endpoint} returns status #{response.code}" if response.code != 200
       movies = JSON.parse(response.body)
