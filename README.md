@@ -31,7 +31,7 @@ param: movie_ids    # a list of movie ids in delivery order
 ```
 GET /movie_queues/<user_id>
 param: sort_by      # sort by rank(default), or a movie field (year, genre, name)
-param: order        # a list of movie ids in delivery order 
+param: order        # 1 = descending, everything else = ascending
 ```
 
 ##### Update a user's movie queue
