@@ -18,7 +18,7 @@ The design is aimed to support the following work load:
 - [15K movies + tv shows](https://usa.newonnetflix.info/catalog/year/all/2017)
 - Max of 200 movies in a user’s delivery queue
 
-![alt text](https://github.com/edithau/tree/master/images/mqs_design.png?raw=true "Design Diagram")
+![Design Diagram](/images/mqs_design.png?raw=true "Design Diagram")
 
 
 ## Try it out on AWS
@@ -30,12 +30,12 @@ http POST http://54.193.41.195:3000/movie_queues user_id=36 movie_ids=1,2,99
 ```
 To access the newly created movie queue, sorted by year in descending order (optional).  Default sort method is by movie delivery order (aka rank)
 ```
-http http://54.193.41.195:3000/movie_queues/37 sort_by==year order==1
+http http://54.193.41.195:3000/movie_queues/36 sort_by==year order==1
 ```
 
 To adjust the movie queue delivery order (rank).  The following example will add or move movie id 302 to the top of the queue (depends if the movie exists in the queue or not).  For the full set of re-ranking rules, see the bottom of this doc
 ```
-http PUT http://54.193.41.195:3000/movie_queues/37  movie_id==302 new_rank==0 
+http PUT http://54.193.41.195:3000/movie_queues/36  movie_id==302 new_rank==0 
 ```
 
 
@@ -51,10 +51,10 @@ http PUT http://54.193.41.195:3000/movie_queues/37  movie_id==302 new_rank==0
 2. download & install [UserServices](https://github.com/edithau/user_services) and start the server at localhost:3001
 3. download & install [MovieServices](https://github.com/edithau/movie_services) and start the server at localhost:3002
 4.  download & install [MovieQueueServices](https://github.com/edithau/movie_queue_services) and start the server at localhost:3000
-4.1 git clone https://github.com/edithau/movie_queue_services
-4.2 cd movie_queue_services
-4.3 bundle install
-4.4 rails s -p 3000
+  * git clone https://github.com/edithau/movie_queue_services
+  * cd movie_queue_services
+  * bundle install
+  * rails s -p 3000
 5. Try the httpie examples above with your MovieQueueServices (localhost:3000)!
 
 ## Running the tests

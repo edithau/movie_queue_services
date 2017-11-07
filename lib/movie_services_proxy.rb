@@ -54,8 +54,8 @@ class MovieServicesProxy
 
     def get_from_source(ids)
       Rails.logger.info("Cache Missed -- Movie")
-      endpoint = service_endpoint + '/movies?ids=' + ids.join(',')
-      result = RestClient.get(endpoint, params: { fields: required_fields }){ |response, request, result, &block|
+      endpoint = service_endpoint + '/movies'
+      result = RestClient.get(endpoint, params: { ids: ids.join(','), fields: required_fields }){ |response, request, result, &block|
         if response.code == 404
           []
         elsif response.code != 200
