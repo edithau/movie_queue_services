@@ -51,10 +51,6 @@ http PUT http://54.193.41.195:3000/movie_queues/36  movie_id==302 new_rank==0
 2. download & install [UserServices](https://github.com/edithau/user_services) and start the server at localhost:3001
 3. download & install [MovieServices](https://github.com/edithau/movie_services) and start the server at localhost:3002
 4.  download & install [MovieQueueServices](https://github.com/edithau/movie_queue_services) and start the server at localhost:3000
-  * git clone https://github.com/edithau/movie_queue_services
-  * cd movie_queue_services
-  * bundle install
-  * rails s -p 3000
 5. Try the httpie examples above with your MovieQueueServices (localhost:3000)!
 
 ## Running the tests
