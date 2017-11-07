@@ -22,8 +22,9 @@ class UserServicesProxy
         file = File.read(json_file)
         users = JSON.parse(file)
       else
-        response = RestClient.get service_endpoint params: { fields: required_fields }
-        raise "User Services #{service_endpoint} returns status #{response.code}" if response.code != 200
+        endpoint = service_endpoint + '/last_logged_in_users'
+        response = RestClient.get endpoint params: { fields: required_fields }
+        raise "User Services #{endpoint} returns status #{response.code}" if response.code != 200
         users = JSON.parse(response.body)
       end
 
@@ -41,13 +42,14 @@ class UserServicesProxy
     private
 
     def service_endpoint
-      'http://localhost:3002/users'  # XXX should move to configuration file
+      'http://localhost:3001'  # XXX should move to configuration file
     end
 
     def get_from_source(uid)
       Rails.logger.info("Cache Missed -- User")
-      response = RestClient.get service_endpoint + '/' + uid, params: { fields: required_fields }
-      raise "User Services #{service_endpoint} returns status #{response.code}" if response.code != 200
+      endpoint = service_endpoint + '/users'
+      response = RestClient.get endpoint + '/' + uid, params: { fields: required_fields }
+      raise "User Services #{endpoint} returns status #{response.code}" if response.code != 200
 
       user = JSON.parse(response.body)
       redis.hmset(key(user['id']), 'lname', user['lname'], 'fname', user['fname'])

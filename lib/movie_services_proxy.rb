@@ -24,9 +24,10 @@ class MovieServicesProxy
         file = File.read(json_file)
         movies = JSON.parse(file)
       else
+        endpoint = service_endpoint + '/popular_movies'
         # service endpoint returns default number of most recently rented movies required_fields
-        response = RestClient.get service_endpoint params: { fields: required_fields }
-        raise "Cannot pre-populate Movies from endpoint #{service_endpoint}" if response != '200'
+        response = RestClient.get endpoint params: { fields: required_fields }
+        raise "Cannot pre-populate Movies from endpoint #{endpoint}" if response != '200'
         movies = JSON.parse(response.body)
       end
 
@@ -45,14 +46,15 @@ class MovieServicesProxy
     private
 
     def service_endpoint
-      'http://localhost:3003/movies'  # XXX should move to configuration file
+      'http://localhost:3002'  # XXX should move to configuration file
     end
 
     # xxx - not the same error handling process for prepop and real time.  refactor!
     def get_from_source(ids)
       Rails.logger.info("Cache Missed -- Movie")
-      response = RestClient.get service_endpoint + '?ids=' + ids.join(','), params: { fields: required_fields }
-      raise "Movie Services #{service_endpoint} returns status #{response.code}" if response.code != 200
+      endpoint = service_endpoint + '/movies'
+      response = RestClient.get endpoint + '?ids=' + ids.join(','), params: { fields: required_fields }
+      raise "Movie Services #{endpoint} returns status #{response.code}" if response.code != 200
       movies = JSON.parse(response.body)
       movies.each do |movie|
         redis.hmset(key(movie['id']),

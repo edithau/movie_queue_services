@@ -15,6 +15,7 @@ class MovieQueuesControllerTest < ActionController::TestCase
   test '#create -- should create a queue for a user' do
     user_id = '1'
     sorted_movie_ids = '3,7,1,4,11'
+    UserServicesProxy.stubs(:get).returns({'id' => '1'})
     post :create, params: {user_id: user_id, movie_ids: sorted_movie_ids}
     assert_response :success
     assert_equal sorted_movie_ids, MovieQueues.queued_ids(user_id), 'should have created a movie queue but it did not'
@@ -28,13 +29,14 @@ class MovieQueuesControllerTest < ActionController::TestCase
 
   test '#create -- should return an error if an unknown movie id is found in the request' do
     MovieServicesProxy.stubs(:check_ids).returns(['unknown_id, good_id'])
-
+    UserServicesProxy.stubs(:get).returns({'id' => '1'})
     post :create, params: {user_id: '1', movie_ids: '3,7,1,4,11'}
     assert_response :bad_request
   end
 
   test '#create -- should return error if requested movie queue size is larger than max size' do
     MovieQueues.stubs(:max_queue_size).returns 5
+    UserServicesProxy.stubs(:get).returns({'id' => '1'})
     post :create, params: {user_id: '1', movie_ids: '1,2,3,4,5,6'}
     assert_response :bad_request
   end
