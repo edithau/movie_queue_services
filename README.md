@@ -20,6 +20,31 @@ The design is aimed to support the following work load:
 
 ![Design Diagram](/images/mqs_design.png?raw=true "Design Diagram")
 
+## Service Endpoints
+##### Create a movie queue for a user
+```
+POST /movie_queues
+param: user_id 
+param: movie_ids    # a list of movie ids in delivery order 
+```
+##### Get a user's movie queue
+```
+GET /movie_queues/<user_id>
+param: sort_by      # sort by rank(default), or a movie field (year, genre, name)
+param: order        # a list of movie ids in delivery order 
+```
+
+##### Update a user's movie queue
+```
+PUT /movie_queues/<user_id>
+param: movie_id     # the movie to add/reorder/remove from user's queue
+param: new_rank     # new position in the queue (see below for re-rank rules)
+```
+
+##### Delete a user's movie queue
+```
+DELETE /movie_queues/<user_id>
+```
 
 ## Try it out on AWS
 *note: user and movie ids are sequential.  There are 1000 users & 500 movies in total.  The service is pre-cached with 200 users from `User Services` and 200 movies from `Movie Services`*
