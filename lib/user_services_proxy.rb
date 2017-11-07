@@ -1,9 +1,12 @@
 require 'rest-client'
 
-# this is a wrapper class for the User Services.
-# 1. prepopulate X most recently logged in users to it's cache (redis)
-# 2. return user info from cache if the user is present
-# 3. request user info from source (User Service) if cache missed; add the requested user to cache
+# This is a proxy to read and cache users from a remote User Services.
+#
+# How caching works?
+# - use .prepopulate to preload cache with most frequent access users (ie. 1000 most recently logged in users)
+# - User Services queries should be served from cache unless cache missed
+# - on cache missed, retrieve data from User Services and update cache
+
 class UserServicesProxy
 
   class << self
@@ -17,6 +20,7 @@ class UserServicesProxy
       user
     end
 
+    # preload cache from a file or http
     def prepopulate(json_file=nil)
       if !json_file.nil?
         file = File.read(json_file)
@@ -47,13 +51,19 @@ class UserServicesProxy
 
     def get_from_source(uid)
       Rails.logger.info("Cache Missed -- User")
-      endpoint = service_endpoint + '/users'
-      response = RestClient.get endpoint + '/' + uid, params: { fields: required_fields }
-      raise "User Services #{endpoint} returns status #{response.code}" if response.code != 200
-
-      user = JSON.parse(response.body)
-      redis.hmset(key(user['id']), 'lname', user['lname'], 'fname', user['fname'])
-      {'lname': user['lname'], 'fname': user['fname']}
+      endpoint = service_endpoint + '/users/' + uid
+      result = RestClient.get(endpoint, params: { fields: required_fields }){ |response, request, result, &block|
+        if response.code == 404
+          nil
+        elsif response.code != 200
+          raise "User Services #{endpoint} returns status #{response.code}"
+        else
+          user = JSON.parse(response.body)
+          redis.hmset(key(user['id']), 'lname', user['lname'], 'fname', user['fname'])
+          {'lname': user['lname'], 'fname': user['fname']}
+        end
+      }
+      result
     end
 
     def required_fields

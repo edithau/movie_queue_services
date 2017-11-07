@@ -1,5 +1,8 @@
+
+# this class provides lower level movie queues CRUD type operations.
+# the queues are persisted in REDIS and backed by hard disk
 class MovieQueues
-  MAX_QUEUE_SIZE = 200
+  MAX_QUEUE_SIZE = 200  # per user
   class << self
 
     def create(uid, sorted_movie_ids)

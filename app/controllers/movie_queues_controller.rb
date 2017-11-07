@@ -1,3 +1,4 @@
+# Movie Queues management services - CRUD type operations
 class MovieQueuesController < ApplicationController
   class ClientError < StandardError
   end
@@ -5,7 +6,7 @@ class MovieQueuesController < ApplicationController
   rescue_from StandardError, with: :return_service_error
   rescue_from ClientError, with: :return_client_error
 
-  # return a user's movie queue
+  # return a user's movie queue, optionally sort by a selected movie field
   # return an empty queue if the user does not have a queue
   def show
     user_id = params[:id]
@@ -31,7 +32,7 @@ class MovieQueuesController < ApplicationController
     head :created
   end
 
-  # update a user's queue (re-rank a movie, add a movie to queue, delete a movie from queue)
+  # update a user's queue (re-rank a movie in a queue, add a movie to a queue, delete a movie from a queue)
   def update
     uid = params[:id]
     movie_id = params[:movie_id]
@@ -63,7 +64,6 @@ class MovieQueuesController < ApplicationController
     raise ClientError, 'Missing require param: movie ids (in ranked order) ' if movie_ids.nil?
 
     movie_ids = movie_ids.split(',')
-
     if movie_ids.size > MovieQueues.max_queue_size
       raise ClientError, "Queue size #{movie_ids.size} exceeds max queue size (#{MovieQueues.max_queue_size})"
     end
@@ -72,7 +72,7 @@ class MovieQueuesController < ApplicationController
     raise ClientError, "Duplicate id #{dup_id} in the movie ids param" if !dup_id.nil?
 
     invalid_movie_ids = MovieServicesProxy.check_ids(movie_ids)
-    raise ClientError, "Movie ids #{invalid_movie_ids} do not exist in the Movie Service" if !invalid_movie_ids.empty?
+    raise ClientError, "Movie ids #{invalid_movie_ids} not found in the Movie Service" if !invalid_movie_ids.empty?
   end
 
   def return_client_error(error)
