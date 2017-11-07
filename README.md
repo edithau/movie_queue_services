@@ -18,7 +18,7 @@ The design is aimed to support the following work load:
 - [15K movies + tv shows](https://usa.newonnetflix.info/catalog/year/all/2017)
 - Max of 200 movies in a user’s delivery queue
 
-![alt text](https://github.com/edithau/tree/master/images/mqs_design.png "Design Diagram")
+![alt text](https://github.com/edithau/tree/master/images/mqs_design.png?raw=true "Design Diagram")
 
 
 ## Try it out on AWS
