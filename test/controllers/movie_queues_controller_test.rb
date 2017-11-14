@@ -14,11 +14,11 @@ class MovieQueuesControllerTest < ActionController::TestCase
 
   test '#create -- should create a queue for a user' do
     user_id = '1'
-    sorted_movie_ids = '3,7,1,4,11'
+    sorted_movie_ids = '3,7,1,4, 11'  # extra spaces should be trimmed before committing to db
     UserServicesProxy.stubs(:get).returns({'id' => '1'})
     post :create, params: {user_id: user_id, movie_ids: sorted_movie_ids}
     assert_response :success
-    assert_equal sorted_movie_ids, MovieQueues.queued_ids(user_id), 'should have created a movie queue but it did not'
+    assert_equal sorted_movie_ids.gsub(/\s+/,''), MovieQueues.queued_ids(user_id), 'should have created a movie queue but it did not'
   end
 
   test '#create -- should return an error if a required param is missing' do
@@ -60,7 +60,7 @@ class MovieQueuesControllerTest < ActionController::TestCase
 
   test '#update -- add a movie to position 2 in the queue' do
     uid = '1'
-    movie_ids = '3,7,4,11'
+    movie_ids = '3,7,4,11' # extra spaces should be trimmed before committing to db
     MovieQueues.create(uid, movie_ids)
     put :update, params: {id: uid, movie_id: '9', new_rank: '2'}
     assert_response :ok

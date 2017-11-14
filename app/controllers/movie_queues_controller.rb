@@ -27,7 +27,7 @@ class MovieQueuesController < ApplicationController
     validate_user uid
     validate_movies mids
 
-    MovieQueues.create(uid, mids)
+    MovieQueues.create(uid, mids.gsub(/\s+/, ''))
 
     head :created
   end
