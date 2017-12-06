@@ -1,5 +1,5 @@
 # Movie Queues Services
-A JSON service for a Netflix-like DVD rental company to manage users’ movie queues.  
+A JSON service for a Netflix-like DVD rental company to manage users’ movie delivery queues.  
 
 API Features include:
 - retrieve a list of movies in rank order of next delivery 
