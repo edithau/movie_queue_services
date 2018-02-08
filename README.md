@@ -51,16 +51,16 @@ DELETE /movie_queues/<user_id>
 
 To create a movie queue for an existing user (user id = 36) using `httpie`
 ```
-http POST http://52.53.185.99:3000/movie_queues user_id=36 movie_ids=1,2,99
+http POST http://52.53.187.123:3000/movie_queues user_id=36 movie_ids=1,2,99
 ```
 To access the newly created movie queue, sorted by year in descending order (optional).  Default sort method is by movie delivery order (aka rank)
 ```
-http http://52.53.185.99:3000/movie_queues/36 sort_by==year order==1
+http http://52.53.187.123:3000/movie_queues/36 sort_by==year order==1
 ```
 
 To adjust the movie queue delivery order (rank).  The following example will add or move movie id 302 to the top of the queue (depends if the movie exists in the queue or not).  For the full set of re-ranking rules, see the bottom of this doc
 ```
-http PUT http://52.53.185.99:3000/movie_queues/36  movie_id==302 new_rank==0 
+http PUT http://52.53.187.123:3000/movie_queues/36  movie_id==302 new_rank==0 
 ```
 
 
