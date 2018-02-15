@@ -46,7 +46,7 @@ param: new_rank     # new position in the queue (see below for re-rank rules)
 DELETE /movie_queues/<user_id>
 ```
 
-## Try it out on AWS
+## Try it out on AWS (Disabled)
 *note: user and movie ids are sequential.  There are 1000 users & 500 movies in total.  The service is pre-cached with 200 users from `User Services` and 200 movies from `Movie Services`*
 
 To create a movie queue for an existing user (user id = 36) using `httpie`
